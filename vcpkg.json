@@ -1,0 +1,9 @@
+{
+    "name": "bcos-crypto",
+    "version-string": "1.0-dev",
+    "homepage": "https://github.com/FISCO-BCOS/bcos-crypto",
+    "description": "Text and font handling library.",
+    "dependencies": [
+        "boost"
+    ]
+}
