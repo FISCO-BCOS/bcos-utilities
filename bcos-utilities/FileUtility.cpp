@@ -31,7 +31,7 @@ inline std::shared_ptr<T> genericReadContents(boost::filesystem::path const& _fi
 {
     std::shared_ptr<T> content = std::make_shared<T>();
     size_t const c_elementSize = sizeof(typename T::value_type);
-    boost::filesystem::ifstream fileStream(_file, std::ifstream::binary);
+    std::ifstream fileStream(_file, std::ifstream::binary);
     if (!fileStream)
     {
         return content;
