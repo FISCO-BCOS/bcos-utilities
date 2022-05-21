@@ -179,18 +179,21 @@ jobs:
         with:
           fetch-depth: 5
       - uses: friendlyanon/setup-vcpkg@v1
-      - uses: microsoft/setup-msbuild@v1.1
-      - name: prepare
+      - name: Prepare windows msbuild
+        if: runner.os == 'Windows'
+        uses: microsoft/setup-msbuild@v1.1
+      - name: Prepare linux build tool
         if: runner.os == 'Linux'
         run: |
           sudo apt install -y git curl g++-10 cmake ccache lcov
           sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-10 100
           sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-10 100
+      - name: prepare macOS build tool
         if: runner.os = 'macOS'
         run: brew install llvm
       - name: configure
         run:
-          mkdir -p build && cd build && cmake -DCMAKE_BUILD_TYPE=Release -DTESTS=ON -DHUNTER_ENABLED=OFF -DCMAKE_TOOLCHAIN_FILE=${{ env.VCPKG_ROOT }}/scripts/buildsystems/vcpkg.cmake ${{ env.cmake_padding }} ../ 
+          mkdir -p build && cd build && cmake -DCMAKE_BUILD_TYPE=Release -DTESTS=ON -DHUNTER_ENABLED=OFF -DCMAKE_TOOLCHAIN_FILE=${{ env.VCPKG_ROOT }}/scripts/buildsystems/vcpkg.cmake ../ 
       - name: compile
         run: 
           cd build && cmake --build --parallel .
