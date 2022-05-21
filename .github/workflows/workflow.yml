@@ -189,7 +189,7 @@ jobs:
           sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-10 100
           sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-10 100
       - name: prepare macOS build tool
-        if: runner.os = 'macOS'
+        if: runner.os == 'macOS'
         run: brew install llvm
       - name: configure
         run:
