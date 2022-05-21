@@ -51,7 +51,7 @@ jobs:
           export CXX="$(brew --prefix llvm)/bin/clang++"
       - name: configure
         run:
-          mkdir -p build && cd build && cmake -DCMAKE_BUILD_TYPE=Release -DTESTS=ON -DHUNTER_ENABLED=OFF -DCMAKE_TOOLCHAIN_FILE=${{ env.VCPKG_INSTALLATION_ROOT }}/scripts/buildsystems/vcpkg.cmake ../ 
+          mkdir -p build && cd build && cmake -DCMAKE_BUILD_TYPE=Release -DTESTS=ON -DHUNTER_ENABLED=OFF -DCMAKE_TOOLCHAIN_FILE=${{ VCPKG_INSTALLATION_ROOT }}/scripts/buildsystems/vcpkg.cmake ../ 
       - name: compile
         run: 
           cd build && cmake --build . --parallel
