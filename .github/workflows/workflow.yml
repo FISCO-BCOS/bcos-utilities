@@ -33,17 +33,17 @@ jobs:
         run: |
           sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-10 100
           sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-10 100
-      - name: prepare macOS build tool
+      - name: Configure for macOS
         if: runner.os == 'macOS'
-        run: |
-          export CC="$(brew --prefix llvm)/bin/clang"
-          export CXX="$(brew --prefix llvm)/bin/clang++"
-      - name: configure
         run:
-          mkdir -p build && cd build && cmake -DCMAKE_BUILD_TYPE=Release -DTESTS=ON -DHUNTER_ENABLED=OFF -DCMAKE_TOOLCHAIN_FILE=${{ env.VCPKG_ROOT }}/scripts/buildsystems/vcpkg.cmake ../ 
-      - name: compile
+          mkdir -p build && cd build && CC="$(brew --prefix llvm)/bin/clang" CXX="$(brew --prefix llvm)/bin/clang++" cmake -DCMAKE_BUILD_TYPE=Release -DTESTS=ON -DHUNTER_ENABLED=OFF -DCMAKE_TOOLCHAIN_FILE=${{ env.VCPKG_ROOT }}/scripts/buildsystems/vcpkg.cmake ../
+      - name: Configure for linux and windows
+        if: runner.os != 'macOS'
+        run:
+          mkdir -p build && cd build && cmake -DCMAKE_BUILD_TYPE=Release -DTESTS=ON -DHUNTER_ENABLED=OFF -DCMAKE_TOOLCHAIN_FILE=${{ env.VCPKG_ROOT }}/scripts/buildsystems/vcpkg.cmake ../
+      - name: Compile
         run: 
           cd build && cmake --build . --parallel
-      - name: test
+      - name: Test
         run:
           cd build && CTEST_OUTPUT_ON_FAILURE=TRUE ctest
