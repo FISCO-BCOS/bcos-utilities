@@ -1,9 +1,14 @@
 {
-    "name": "bcos-crypto",
+    "name": "bcos-utilities",
     "version-string": "1.0-dev",
-    "homepage": "https://github.com/FISCO-BCOS/bcos-crypto",
-    "description": "Text and font handling library.",
+    "homepage": "https://github.com/FISCO-BCOS/bcos-utilities",
+    "description": "",
     "dependencies": [
-        "boost"
+        "boost-log",
+        "boost-chrono",
+        "boost-iostreams",
+        "boost-thread",
+        "boost-test",
+        "boost-multiprecision"
     ]
 }
