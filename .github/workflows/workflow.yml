@@ -179,14 +179,13 @@ jobs:
         with:
           fetch-depth: 5
       - uses: friendlyanon/setup-vcpkg@v1
+      - uses: microsoft/setup-msbuild@v1.1
       - name: prepare
         if: runner.os == 'Linux'
         run: |
           sudo apt install -y git curl g++-10 cmake ccache lcov
           sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-10 100
           sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-10 100
-        if: runner.os == 'Windows'
-        uses: microsoft/setup-msbuild@v1.1
         if: runner.os = 'macOS'
         run: brew install llvm
       - name: configure
