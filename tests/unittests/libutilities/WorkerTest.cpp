@@ -23,6 +23,8 @@
 #include "bcos-utilities/Timer.h"
 #include "bcos-utilities/testutils/TestPromptFixture.h"
 #include <boost/test/unit_test.hpp>
+#include <chrono>
+#include <thread>
 using namespace bcos;
 using namespace std;
 
@@ -61,7 +63,7 @@ BOOST_AUTO_TEST_CASE(testWorker)
 {
     TestWorkerImpl workerImpl;
     workerImpl.run();
-    usleep(1000 * 10 * 5);
+    std::this_thread::sleep_for(std::chrono::seconds(1));
     workerImpl.stop();
 }
 BOOST_AUTO_TEST_SUITE_END()
