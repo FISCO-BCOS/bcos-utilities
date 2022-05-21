@@ -183,7 +183,6 @@ jobs:
       - name: Prepare windows msbuild
         if: runner.os == 'Windows'
         uses: microsoft/setup-msbuild@v1.1
-        run: cmake_suffix='-G "Visual Studio 16 2019" -A x64'
       - name: Prepare linux build tool
         if: runner.os == 'Linux'
         run: |
