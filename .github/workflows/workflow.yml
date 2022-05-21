@@ -12,9 +12,9 @@ on:
       - "README.md"
   release:
     types: [published, created, edited]
-
+jobs:
   build_with_vcpkg:
-    name: build_with_vcpkg_all_platform
+    name: build_with_vcpkg
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
