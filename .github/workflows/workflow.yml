@@ -19,28 +19,38 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-20.04,windows-2019,macos-latest]
+        use_hunter: [ON,OFF]
     steps:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 5
-      - uses: friendlyanon/setup-vcpkg@v1
-        with: { committish: 7e3dcf74e37034eea358934a90a11d618520e139 }
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: nightly-2021-06-17
+          override: true
       - name: Prepare windows msbuild
         if: runner.os == 'Windows'
         uses: microsoft/setup-msbuild@v1.1
-      - name: Prepare linux build tool
+      - name: Prepare linux gcc-10
         if: runner.os == 'Linux'
         run: |
           sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-10 100
           sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-10 100
-      - name: Configure for macOS
+      - name: Prepare macos llvm clang
         if: runner.os == 'macOS'
+        run: |
+          export CC="$(brew --prefix llvm)/bin/clang"
+          export CXX="$(brew --prefix llvm)/bin/clang++"
+      - name: Configure with vcpkg
+        if: matrix.use_hunter == 'OFF'
+        uses: friendlyanon/setup-vcpkg@v1
+        with: { committish: 7e3dcf74e37034eea358934a90a11d618520e139 }
         run:
-          mkdir -p build && cd build && CC="$(brew --prefix llvm)/bin/clang" CXX="$(brew --prefix llvm)/bin/clang++" cmake -DCMAKE_BUILD_TYPE=Release -DTESTS=ON -DHUNTER_ENABLED=OFF -DCMAKE_TOOLCHAIN_FILE=${{ env.VCPKG_ROOT }}/scripts/buildsystems/vcpkg.cmake ../
-      - name: Configure for linux and windows
-        if: runner.os != 'macOS'
+          mkdir -p build && cd build && cmake -DCMAKE_BUILD_TYPE=Release -DTESTS=ON -DHUNTER_ENABLED=${{ matrix.use_hunter }} -DCMAKE_TOOLCHAIN_FILE=${{ env.VCPKG_ROOT }}/scripts/buildsystems/vcpkg.cmake ../
+      - name: Configure with hunter
+        if: matrix.use_hunter == 'ON'
         run:
-          mkdir -p build && cd build && cmake -DCMAKE_BUILD_TYPE=Release -DTESTS=ON -DHUNTER_ENABLED=OFF -DCMAKE_TOOLCHAIN_FILE=${{ env.VCPKG_ROOT }}/scripts/buildsystems/vcpkg.cmake ../
+          mkdir -p build && cd build && cmake -DCMAKE_BUILD_TYPE=Release -DTESTS=ON -DHUNTER_ENABLED=${{ matrix.use_hunter }} ../
       - name: Compile
         run: 
           cd build && cmake --build . --parallel
