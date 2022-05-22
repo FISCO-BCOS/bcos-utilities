@@ -79,7 +79,7 @@ void setStatLogLevel(LogLevel const& _level);
 
 #define BCOS_LOG(level)                                \
     if (bcos::LogLevel::level >= bcos::c_fileLogLevel) \
-    BOOST_LOG_SEV(bcos::FileLoggerHandler,             \
-        (boost::log::BOOST_LOG_VERSION_NAMESPACE::trivial::severity_level)(bcos::LogLevel::level))
+    BOOST_LOG_SEV(                                     \
+        bcos::FileLoggerHandler, (boost::log::trivial::severity_level)(bcos::LogLevel::level))
 
 }  // namespace bcos

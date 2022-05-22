@@ -138,7 +138,6 @@ if (("${CMAKE_CXX_COMPILER_ID}" MATCHES "GNU") OR ("${CMAKE_CXX_COMPILER_ID}" MA
         endif()
     endif ()
 elseif("${CMAKE_CXX_COMPILER_ID}" MATCHES "MSVC")
-    
     # Only support visual studio 2017 and visual studio 2019
     set(MSVC_MIN_VERSION "1914") # VS2017 15.7, for full-ish C++17 support
     

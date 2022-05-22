@@ -20,9 +20,9 @@
 #include <stdio.h>
 #include <cstdlib>
 #include <fstream>
+#include <boost/filesystem.hpp>
+#include <boost/filesystem/fstream.hpp> 
 using namespace std;
-
-namespace fs = boost::filesystem;
 
 namespace bcos
 {
@@ -31,13 +31,15 @@ inline std::shared_ptr<T> genericReadContents(boost::filesystem::path const& _fi
 {
     std::shared_ptr<T> content = std::make_shared<T>();
     size_t const c_elementSize = sizeof(typename T::value_type);
-    std::ifstream fileStream(_file.c_str(), std::ifstream::binary);
+
+    boost::filesystem::ifstream fileStream(_file, std::ifstream::binary);
     if (!fileStream)
     {
         return content;
     }
     fileStream.seekg(0, fileStream.end);
     streamoff length = fileStream.tellg();
+
     if (length == 0)
     {
         return content;
