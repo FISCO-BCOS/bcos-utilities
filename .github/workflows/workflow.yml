@@ -41,10 +41,12 @@ jobs:
         run: |
           export CC="$(brew --prefix llvm)/bin/clang"
           export CXX="$(brew --prefix llvm)/bin/clang++"
-      - name: Configure with vcpkg
+      - name: Prepare vcpkg
         if: matrix.use_hunter == 'OFF'
         uses: friendlyanon/setup-vcpkg@v1
         with: { committish: 7e3dcf74e37034eea358934a90a11d618520e139 }
+      - name: Configure with vcpkg
+        if: matrix.use_hunter == 'OFF'
         run:
           mkdir -p build && cd build && cmake -DCMAKE_BUILD_TYPE=Release -DTESTS=ON -DHUNTER_ENABLED=${{ matrix.use_hunter }} -DCMAKE_TOOLCHAIN_FILE=${{ env.VCPKG_ROOT }}/scripts/buildsystems/vcpkg.cmake ../
       - name: Configure with hunter
