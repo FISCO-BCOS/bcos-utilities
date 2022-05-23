@@ -41,7 +41,6 @@ jobs:
           alias clang="$(brew --prefix llvm)/bin/clang"
           alias clang++="$(brew --prefix llvm)/bin/clang++"
       - name: Prepare vcpkg
-        if: matrix.package_manager == 'vcpkg'
         uses: friendlyanon/setup-vcpkg@v1
         with: { committish: 7e3dcf74e37034eea358934a90a11d618520e139 }
       - name: Configure
