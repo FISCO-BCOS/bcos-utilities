@@ -19,18 +19,13 @@
 cmake_minimum_required(VERSION 3.10)
 set(CMAKE_OSX_DEPLOYMENT_TARGET "11.3" CACHE STRING "Minimum OS X deployment version")
 
-if (NOT DEFINED URL_BASE)
-    set(URL_BASE "github.com")
-    # set(URL_BASE "github.com.cnpmjs.org")
-endif()
-
 set(BCOS_CMAKE_SCRIPTS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/bcos-cmake-scripts)
 set(BCOS_UTILITIES_CMAKE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/cmake" CACHE PATH "The cmake path for the library")
 list(APPEND CMAKE_MODULE_PATH ${BCOS_CMAKE_SCRIPTS_DIR})
 list(APPEND CMAKE_MODULE_PATH ${BCOS_UTILITIES_CMAKE_DIR})
 
 project(bcos-utilities VERSION "1.0.0")
-set(VERSION_SUFFIX "-rc2")
+set(VERSION_SUFFIX "")
 
 # basic settings
 include(Options)

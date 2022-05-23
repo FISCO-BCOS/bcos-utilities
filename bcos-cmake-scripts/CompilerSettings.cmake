@@ -25,9 +25,8 @@ if (("${CMAKE_CXX_COMPILER_ID}" MATCHES "GNU") OR ("${CMAKE_CXX_COMPILER_ID}" MA
     endif()
     # set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE "/usr/bin/time")
     # set_property(GLOBAL PROPERTY RULE_LAUNCH_LINK "/usr/bin/time")
-    # Use ISO C++17 standard language.
-    set(CMAKE_CXX_STANDARD 17)
-    set(CMAKE_CXX_FLAGS "-std=c++17 -pthread -fPIC -fvisibility=hidden -fvisibility-inlines-hidden -fexceptions")
+    # Use ISO C++20 standard language.
+    set(CMAKE_CXX_STANDARD 20)
     set(CMAKE_FIND_LIBRARY_SUFFIXES .a ${CMAKE_FIND_LIBRARY_SUFFIXES})
     set(CMAKE_CXX_VISIBILITY_PRESET hidden)
     # Enables all the warnings about constructions that some users consider questionable,
@@ -74,7 +73,7 @@ if (("${CMAKE_CXX_COMPILER_ID}" MATCHES "GNU") OR ("${CMAKE_CXX_COMPILER_ID}" MA
     endif ()
 
     # Configuration-specific compiler settings.
-    set(CMAKE_CXX_FLAGS_DEBUG          "-Og -g")
+    set(CMAKE_CXX_FLAGS_DEBUG          "-O0 -g")
     set(CMAKE_CXX_FLAGS_MINSIZEREL     "-Os -DNDEBUG")
     set(CMAKE_CXX_FLAGS_RELEASE        "-O3 -DNDEBUG")
     set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O2 -g")
@@ -91,7 +90,7 @@ if (("${CMAKE_CXX_COMPILER_ID}" MATCHES "GNU") OR ("${CMAKE_CXX_COMPILER_ID}" MA
     # Additional GCC-specific compiler settings.
     if ("${CMAKE_CXX_COMPILER_ID}" MATCHES "GNU")
         # Check that we've got GCC 7.0 or newer.
-        set(GCC_MIN_VERSION "7.0")
+        set(GCC_MIN_VERSION "10.0")
         execute_process(
             COMMAND ${CMAKE_CXX_COMPILER} -dumpversion OUTPUT_VARIABLE GCC_VERSION)
         if (NOT (GCC_VERSION VERSION_GREATER ${GCC_MIN_VERSION} OR GCC_VERSION VERSION_EQUAL ${GCC_MIN_VERSION}))
@@ -100,13 +99,8 @@ if (("${CMAKE_CXX_COMPILER_ID}" MATCHES "GNU") OR ("${CMAKE_CXX_COMPILER_ID}" MA
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${MARCH_TYPE}")
         set(CMAKE_C_FLAGS "-std=c99 ${CMAKE_C_FLAGS} ${MARCH_TYPE}")
 
-		# Strong stack protection was only added in GCC 4.9.
-		# Use it if we have the option to do so.
-		# See https://lwn.net/Articles/584225/
-        if (GCC_VERSION VERSION_GREATER 4.9 OR GCC_VERSION VERSION_EQUAL 4.9)
-            add_compile_options(-fstack-protector-strong)
-            add_compile_options(-fstack-protector)
-        endif()
+        add_compile_options(-fstack-protector-strong)
+        add_compile_options(-fstack-protector)
     # Additional Clang-specific compiler settings.
     elseif ("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang")
         if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS 4.0)
@@ -143,15 +137,11 @@ elseif("${CMAKE_CXX_COMPILER_ID}" MATCHES "MSVC")
     
     message(STATUS "Compile On Windows, MSVC_TOOLSET_VERSION: ${MSVC_TOOLSET_VERSION}")
 
-    if (MSVC_TOOLSET_VERSION EQUAL 141)
-        message(STATUS "Compile On Visual Studio 2017")
-    elseif(MSVC_TOOLSET_VERSION EQUAL 142)
-        message(STATUS "Compile On Visual Studio 2019")
-    else()
-        message(FATAL_ERROR "Unsupported Visual Studio, supported list: [2017, 2019]. Current MSVC_TOOLSET_VERSION: ${MSVC_TOOLSET_VERSION}")
+    if(MSVC_TOOLSET_VERSION LESS 142)
+        message(FATAL_ERROR "Unsupported Visual Studio, supported: >=2019. Current MSVC_TOOLSET_VERSION: ${MSVC_TOOLSET_VERSION}")
     endif()
 
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /std:c++17")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /std:c++latest")
 else ()
     message(WARNING "Your compiler is not tested, if you run into any issues, we'd welcome any patches.")
 endif ()
