@@ -19,7 +19,6 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-20.04,windows-2019,macos-latest]
-        package_manager: [hunter,vcpkg]
     steps:
       - uses: actions/checkout@v2
         with:
@@ -39,36 +38,15 @@ jobs:
       - name: Prepare macos llvm clang
         if: runner.os == 'macOS'
         run: |
-          rm /usr/bin/clang
-          rm /usr/bin/clang++
-          ln -s $(brew --prefix llvm)/bin/clang /usr/bin/clang
-          ln -s $(brew --prefix llvm)/bin/clang++ /usr/bin/clang++
-      - name: Prepare hunter
-        if: matrix.package_manager == 'hunter'
-        uses: actions/cache@v2
-        id: cache
-        with:
-          path: |
-            /home/runner/.hunter
-            /Users/runner/.hunter/
-            deps/src
-          key: hunter-clang-v8-notest-${{ runner.temp }}-${{ github.base_ref }}-${{ hashFiles('.github/workflows/workflow.yml') }}
-          restore-keys: |
-            hunter-clang-v8-notest-${{ runner.temp }}-${{ github.base_ref }}-${{ hashFiles('.github/workflows/workflow.yml') }}
-            hunter-clang-v8-notest-${{ runner.temp }}-${{ github.base_ref }}-
-            hunter-clang-v8-notest-${{ runner.temp }}-
+          alias clang="$(brew --prefix llvm)/bin/clang"
+          alias clang++="$(brew --prefix llvm)/bin/clang++"
       - name: Prepare vcpkg
         if: matrix.package_manager == 'vcpkg'
         uses: friendlyanon/setup-vcpkg@v1
         with: { committish: 7e3dcf74e37034eea358934a90a11d618520e139 }
-      - name: Configure with vcpkg
-        if: matrix.package_manager == 'vcpkg'
+      - name: Configure
         run:
-          mkdir -p build && cd build && cmake -DCMAKE_BUILD_TYPE=Release -DTESTS=ON -DHUNTER_ENABLED=OFF -DCMAKE_TOOLCHAIN_FILE=${{ env.VCPKG_ROOT }}/scripts/buildsystems/vcpkg.cmake ../
-      - name: Configure with hunter
-        if: matrix.package_manager == 'hunter'
-        run:
-          mkdir -p build && cd build && cmake -DCMAKE_BUILD_TYPE=Release -DTESTS=ON -DHUNTER_ENABLED=ON ../
+          mkdir -p build && cd build && cmake -DCMAKE_BUILD_TYPE=Release -DTESTS=ON -DCMAKE_TOOLCHAIN_FILE=${{ env.VCPKG_ROOT }}/scripts/buildsystems/vcpkg.cmake ../
       - name: Compile
         run: 
           cd build && cmake --build . --parallel
