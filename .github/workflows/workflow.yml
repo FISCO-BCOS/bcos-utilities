@@ -35,15 +35,15 @@ jobs:
         run: |
           sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-10 100
           sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-10 100
-      - name: Prepare macos llvm clang
-        if: runner.os == 'macOS'
-        run: |
-          alias clang="$(brew --prefix llvm)/bin/clang"
-          alias clang++="$(brew --prefix llvm)/bin/clang++"
       - name: Prepare vcpkg
         uses: friendlyanon/setup-vcpkg@v1
         with: { committish: 7e3dcf74e37034eea358934a90a11d618520e139 }
-      - name: Configure
+      - name: Configure for macos
+        if: runnos.os == 'macOS'
+        run:
+          mkdir -p build && cd build && CC="$(brew --prefix llvm)/bin/clang" CXX="$(brew --prefix llvm)/bin/clang++" cmake -DCMAKE_BUILD_TYPE=Release -DTESTS=ON -DCMAKE_TOOLCHAIN_FILE=${{ env.VCPKG_ROOT }}/scripts/buildsystems/vcpkg.cmake ../
+      - name: Configure for linux and windows
+        if: runner.os != 'macOS'
         run:
           mkdir -p build && cd build && cmake -DCMAKE_BUILD_TYPE=Release -DTESTS=ON -DCMAKE_TOOLCHAIN_FILE=${{ env.VCPKG_ROOT }}/scripts/buildsystems/vcpkg.cmake ../
       - name: Compile
