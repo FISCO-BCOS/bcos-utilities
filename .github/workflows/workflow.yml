@@ -80,10 +80,10 @@ jobs:
           . /opt/rh/rh-perl530/enable
           mkdir -p build
           cd build
-          cmake3 -DCMAKE_BUILD_TYPE=Release -DTESTS=ON -DCMAKE_TOOLCHAIN_FILE=${{ env.VCPKG_ROOT }}/scripts/buildsystems/vcpkg.cmake ../ || cat /__w/bcos-utilities/bcos-utilities/build/vcpkg-manifest-install.log
+          cmake3 -DCMAKE_BUILD_TYPE=Release -DTESTS=ON -DCMAKE_TOOLCHAIN_FILE=${{ env.VCPKG_ROOT }}/scripts/buildsystems/vcpkg.cmake ../
       - name: Compile
         run: 
           cd build && cmake3 --build . --parallel
       - name: Test
         run:
-          cd build && CTEST_OUTPUT_ON_FAILURE=TRUE ctest
+          cd build && CTEST_OUTPUT_ON_FAILURE=TRUE make test
