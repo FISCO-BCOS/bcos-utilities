@@ -65,16 +65,17 @@ jobs:
         with:
           toolchain: nightly-2021-06-17
           override: true
-      - name: Prepare linux gcc-10 
+      - name: Prepare centos tools
         run: |
           yum install yum install -y epel-release centos-release-scl
-          yum install -y devtoolset-10 cmake3 git
+          yum install -y devtoolset-10  rh-perl530-perl cmake3 git
       - name: Prepare vcpkg
         uses: friendlyanon/setup-vcpkg@v1
         with: { committish: 7e3dcf74e37034eea358934a90a11d618520e139 }
       - name: Configure
         run: |
           . /opt/rh/devtoolset-10/enable
+          . /opt/rh/rh-perl530/enable
           mkdir -p build && cd build && cmake3 -DCMAKE_BUILD_TYPE=Release -DTESTS=ON -DCMAKE_TOOLCHAIN_FILE=${{ env.VCPKG_ROOT }}/scripts/buildsystems/vcpkg.cmake ../
       - name: Compile
         run: 
