@@ -65,9 +65,9 @@ jobs:
         with:
           toolchain: nightly-2021-06-17
           override: true
-      - name: Prepare linux gcc-10
+      - name: Prepare linux gcc-10 
         run: |
-          yum install yum install -y epel-release centos-release-scl 
+          yum install yum install -y epel-release centos-release-scl
           yum install -y devtoolset-10 cmake3 git
           source /opt/rh/devtoolset-10/enable
       - name: Prepare vcpkg
