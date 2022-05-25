@@ -69,12 +69,12 @@ jobs:
         run: |
           yum install yum install -y epel-release centos-release-scl
           yum install -y devtoolset-10 cmake3 git
-          source /opt/rh/devtoolset-10/enable
       - name: Prepare vcpkg
         uses: friendlyanon/setup-vcpkg@v1
         with: { committish: 7e3dcf74e37034eea358934a90a11d618520e139 }
       - name: Configure
-        run:
+        run: |
+          . /opt/rh/devtoolset-10/enable
           mkdir -p build && cd build && cmake3 -DCMAKE_BUILD_TYPE=Release -DTESTS=ON -DCMAKE_TOOLCHAIN_FILE=${{ env.VCPKG_ROOT }}/scripts/buildsystems/vcpkg.cmake ../
       - name: Compile
         run: 
