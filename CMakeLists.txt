@@ -31,6 +31,7 @@ set(VERSION_SUFFIX "")
 include(Options)
 configure_project()
 include(CompilerSettings)
+include(GNUInstallDirs)
 
 include_directories(${CMAKE_INSTALL_INCLUDEDIR})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
@@ -46,20 +47,8 @@ if (TESTS)
     add_subdirectory(tests)
 endif()
 
-# for install
-include(InstallConfig)
-# install utilities target
-install(
-    TARGETS ${BCOS_UTILITIES_TARGET}
-    EXPORT "${TARGETS_EXPORT_NAME}"
-    LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
-    ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
-    RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
-    INCLUDES DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
-)
-
-# install the include files for hash
-include(InstallInclude)
+install(TARGETS ${BCOS_UTILITIES_TARGET} ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}")
+install(DIRECTORY "bcos-utilities" DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}" FILES_MATCHING PATTERN "*.h")
 
 # for doxygen
 include(BuildDocs)
