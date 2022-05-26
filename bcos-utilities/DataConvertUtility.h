@@ -252,7 +252,7 @@ inline std::string toCompactBigEndianString(T _val, unsigned _min = 0)
 // Concatenate two vectors of elements of POD types.
 template <class T>
 inline std::vector<T>& operator+=(
-    std::vector<typename std::enable_if<std::is_pod<T>::value, T>::type>& _a,
+    std::vector<typename std::enable_if<std::is_trivial<T>::value, T>::type>& _a,
     std::vector<T> const& _b)
 {
     auto s = _a.size();
@@ -264,7 +264,7 @@ inline std::vector<T>& operator+=(
 /// Concatenate two vectors of elements.
 template <class T>
 inline std::vector<T>& operator+=(
-    std::vector<typename std::enable_if<!std::is_pod<T>::value, T>::type>& _a,
+    std::vector<typename std::enable_if<!std::is_trivial<T>::value, T>::type>& _a,
     std::vector<T> const& _b)
 {
     _a.reserve(_a.size() + _b.size());

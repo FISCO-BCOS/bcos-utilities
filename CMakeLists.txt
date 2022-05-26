@@ -19,31 +19,19 @@
 cmake_minimum_required(VERSION 3.10)
 set(CMAKE_OSX_DEPLOYMENT_TARGET "11.3" CACHE STRING "Minimum OS X deployment version")
 
-if (NOT DEFINED URL_BASE)
-    set(URL_BASE "github.com")
-    # set(URL_BASE "github.com.cnpmjs.org")
-endif()
-
 set(BCOS_CMAKE_SCRIPTS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/bcos-cmake-scripts)
 set(BCOS_UTILITIES_CMAKE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/cmake" CACHE PATH "The cmake path for the library")
 list(APPEND CMAKE_MODULE_PATH ${BCOS_CMAKE_SCRIPTS_DIR})
 list(APPEND CMAKE_MODULE_PATH ${BCOS_UTILITIES_CMAKE_DIR})
 
-if((NOT DEFINED HUNTER_ENABLED) OR (HUNTER_ENABLED))
-    include(HunterGate)
-    HunterGate(
-        URL "https://${URL_BASE}/FISCO-BCOS/hunter/archive/203039fdd0826330facd9c3841082dbf35d0c808.tar.gz"
-        SHA1 "26ca1840eb26da410913469f2f278569c8d383ae"
-        FILEPATH "${BCOS_UTILITIES_CMAKE_DIR}/config.cmake"
-    )
-endif()
 project(bcos-utilities VERSION "1.0.0")
-set(VERSION_SUFFIX "-rc2")
+set(VERSION_SUFFIX "")
 
 # basic settings
 include(Options)
 configure_project()
 include(CompilerSettings)
+include(GNUInstallDirs)
 
 include_directories(${CMAKE_INSTALL_INCLUDEDIR})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
@@ -59,20 +47,8 @@ if (TESTS)
     add_subdirectory(tests)
 endif()
 
-# for install
-include(InstallConfig)
-# install utilities target
-install(
-    TARGETS ${BCOS_UTILITIES_TARGET}
-    EXPORT "${TARGETS_EXPORT_NAME}"
-    LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
-    ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
-    RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
-    INCLUDES DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
-)
-
-# install the include files for hash
-include(InstallInclude)
+install(TARGETS ${BCOS_UTILITIES_TARGET} ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}")
+install(DIRECTORY "bcos-utilities" DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}" FILES_MATCHING PATTERN "*.h")
 
 # for doxygen
 include(BuildDocs)
