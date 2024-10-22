@@ -3,7 +3,7 @@
       {
         "kind": "git",
         "repository": "https://github.com/FISCO-BCOS/registry",
-        "baseline": "3765dfb347d9fc820cfad9005b2f87d0755895ec",
+        "baseline": "b483a0287c6ee7017983942af540e3ee672b0994",
         "packages": [
           "tbb",
           "boost-beast",
